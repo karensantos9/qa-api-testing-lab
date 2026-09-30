@@ -1,0 +1,15 @@
+# Use this workspace to collaborate
+workspace:
+  id: a4934493-4aac-42ea-8b4a-a0c73a7ff3b9
+
+dependencies:
+  collections:
+    45029216-f7bfbed5-1d45-4db2-b452-58b4065abeae:
+      name: QA API Testing Lab
+      path: ../postman/.dependencies/collections/QA API Testing Lab
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/
