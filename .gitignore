@@ -2,6 +2,19 @@
 .env
 .env.*
 
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local database
+*.db
+
 # Node
 node_modules/
 
@@ -11,4 +24,6 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+# Postman
 postman/.dependencies/
