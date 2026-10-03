@@ -18,3 +18,8 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserUpdate(BaseModel):
+    name: str = Field(min_length=2)
+    email: EmailStr
+    role: Literal["user", "admin"]
