@@ -1,0 +1,41 @@
+$kind: http-request
+url: http://127.0.0.1:8000/users/99999
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"User Not Found\",\r
+
+    \    \"email\": \"notfound@example.com\",\r
+
+    \    \"role\": \"user\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 404\", function () {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });\r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains error detail\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Error message is correct\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"User not found\");\r
+
+      });"
+    language: text/javascript
+order: 4503599448683183

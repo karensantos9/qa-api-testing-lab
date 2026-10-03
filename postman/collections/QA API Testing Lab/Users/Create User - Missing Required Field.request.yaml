@@ -1,0 +1,51 @@
+$kind: http-request
+url: http://127.0.0.1:8000/users
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"email\": \"missing-name@example.com\",\r
+
+    \  \"password\": \"123456\",\r
+
+    \  \"role\": \"user\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 422\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains validation error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation error identifies the name field\", function () {\r
+
+      \    pm.expect(response.detail[0].loc).to.include(\"name\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation message is correct\", function () {\r
+
+      \    pm.expect(response.detail[0].msg).to.eql(\"Field required\");\r
+
+      });"
+    language: text/javascript
+order: 4501864769010443

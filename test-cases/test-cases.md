@@ -1,33 +1,25 @@
-# Test Cases
+# Test Cases - Users API
 
-## Users
+## POST /users
+├── TC-USER-001 - Criar usuário com dados válidos
+├── TC-USER-002 - Nome com menos de 2 caracteres
+├── TC-USER-003 - E-mail inválido
+├── TC-USER-004 - Senha com menos de 6 caracteres
+├── TC-USER-005 - Role inválida
+├── TC-USER-006 - E-mail duplicado
+└── TC-USER-007 - Campo obrigatório ausente
 
-### TC-USR-001
-**Title:** Create user with valid data
+## GET /users
+└── TC-USER-008 - Listar usuários
 
-**Preconditions:**
-- API available
-- Valid payload
+## GET /users/{user_id}
+├── TC-USER-009 - Buscar usuário existente
+└── TC-USER-010 - Buscar usuário inexistente
 
-**Request:**
-POST /users
-
-**Expected:**
-- HTTP 201
-- User is created
-- Response contains user ID
-- Response contains name
-- Response contains email
-
----
-
-### TC-USR-002
-**Title:** Create user without email
-
-**Request:**
-POST /users
-
-**Expected:**
-- HTTP 400 or 422
-- Validation error returned
-- User is not created
+## PUT /users/{user_id}
+├── TC-USER-011 - Atualizar usuário com dados válidos
+├── TC-USER-012 - Atualizar usuário inexistente
+├── TC-USER-013 - Atualizar com e-mail duplicado
+├── TC-USER-014 - Atualizar com nome inválido
+├── TC-USER-015 - Atualizar com e-mail inválido
+└── TC-USER-016 - Atualizar com role inválida

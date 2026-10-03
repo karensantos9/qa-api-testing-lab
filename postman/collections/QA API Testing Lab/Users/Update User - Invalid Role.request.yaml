@@ -1,0 +1,55 @@
+$kind: http-request
+url: http://127.0.0.1:8000/users/1
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Valid Update\",\r
+
+    \    \"email\": \"valid-role-update@example.com\",\r
+
+    \    \"role\": \"admin123\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 422\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains validation error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation error identifies the role field\", function () {\r
+
+      \    pm.expect(response.detail[0].loc).to.include(\"role\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation message is correct\", function () {\r
+
+      \    pm.expect(response.detail[0].msg).to.eql(\r
+
+      \        \"Input should be 'user' or 'admin'\"\r
+
+      \    );\r
+
+      });"
+    language: text/javascript
+order: 4503599627046792

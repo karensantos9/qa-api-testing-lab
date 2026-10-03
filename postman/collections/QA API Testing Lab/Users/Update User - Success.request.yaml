@@ -1,0 +1,61 @@
+$kind: http-request
+url: http://127.0.0.1:8000/users/1
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Postman Updated User\",\r
+
+    \    \"email\": \"updated@example.com\",\r
+
+    \    \"role\": \"admin\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains updated user data\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"id\");\r
+
+      \    pm.expect(response).to.have.property(\"name\");\r
+
+      \    pm.expect(response).to.have.property(\"email\");\r
+
+      \    pm.expect(response).to.have.property(\"role\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response contains user data\", function () {\r
+
+      \    pm.expect(response.name).to.eql(\"Postman Updated User\");\r
+
+      \    pm.expect(response.email).to.eql(\"updated@example.com\");\r
+
+      \    pm.expect(response.role).to.eql(\"admin\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Password is not returned\", function () {\r
+
+      \    pm.expect(response).to.not.have.property(\"password\");\r
+
+      \    pm.expect(response).to.not.have.property(\"password_hash\");\r
+
+      });"
+    language: text/javascript
+order: 4503599407981719

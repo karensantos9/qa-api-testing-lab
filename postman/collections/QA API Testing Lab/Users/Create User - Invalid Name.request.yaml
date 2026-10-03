@@ -1,0 +1,45 @@
+$kind: http-request
+url: http://127.0.0.1:8000/users
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"A\",\r
+
+    \  \"email\": \"invalid-name@example.com\",\r
+
+    \  \"password\": \"123456\",\r
+
+    \  \"role\": \"user\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 422\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains validation error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation error identifies the name field\", function () {\r
+
+      \    pm.expect(response.detail[0].loc).to.include(\"name\");\r
+
+      });"
+    language: text/javascript
+order: 878645205137617

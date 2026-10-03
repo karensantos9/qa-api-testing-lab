@@ -1,0 +1,41 @@
+$kind: http-request
+url: http://127.0.0.1:8000/users/1
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Trying Duplicate Email\",\r
+
+    \    \"email\": \"postman@example.com\",\r
+
+    \    \"role\": \"user\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 409\", function () {\r
+
+      \    pm.response.to.have.status(409);\r
+
+      });\r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains error detail\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Error message is correct\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Email already registered\");\r
+
+      });"
+    language: text/javascript
+order: 4503599575150941
