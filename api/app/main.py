@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 
 from .database import Base, engine
-from .routers import users
+from .routers import users, products
+
 
 Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="Sales API",
@@ -11,11 +13,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 app.include_router(users.router)
+app.include_router(products.router)
 
 
 @app.get("/health")
 def health_check():
-    return {
-        "status": "ok"
-    }
+    return {"status": "ok"}
