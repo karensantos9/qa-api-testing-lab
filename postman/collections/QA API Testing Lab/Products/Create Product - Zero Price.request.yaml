@@ -1,0 +1,55 @@
+$kind: http-request
+url: http://127.0.0.1:8000/products
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Zero Price Product\",\r
+
+    \  \"price\": 0,\r
+
+    \  \"stock\": 10\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 422\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains validation error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation error identifies the price field\", function () {\r
+
+      \    pm.expect(response.detail[0].loc).to.include(\"price\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation message is correct\", function () {\r
+
+      \    pm.expect(response.detail[0].msg).to.eql(\r
+
+      \        \"Input should be greater than 0\"\r
+
+      \    );\r
+
+      });"
+    language: text/javascript
+order: 1512625843747756

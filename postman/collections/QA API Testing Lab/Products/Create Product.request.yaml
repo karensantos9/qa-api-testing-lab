@@ -1,0 +1,53 @@
+$kind: http-request
+url: http://127.0.0.1:8000/products
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Postman Notebook\",\r
+
+    \  \"price\": 3500,\r
+
+    \  \"stock\": 10\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 201\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains product data\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"id\");\r
+
+      \    pm.expect(response).to.have.property(\"name\");\r
+
+      \    pm.expect(response).to.have.property(\"price\");\r
+
+      \    pm.expect(response).to.have.property(\"stock\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Product data is correct\", function () {\r
+
+      \    pm.expect(response.name).to.eql(\"Postman Notebook\");\r
+
+      \    pm.expect(response.price).to.eql(3500);\r
+
+      \    pm.expect(response.stock).to.eql(10);\r
+
+      });"
+    language: text/javascript
+order: 1792632370687

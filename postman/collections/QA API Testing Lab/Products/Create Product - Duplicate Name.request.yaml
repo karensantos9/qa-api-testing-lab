@@ -1,0 +1,47 @@
+$kind: http-request
+url: http://127.0.0.1:8000/products
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Postman Notebook\",\r
+
+    \  \"price\": 4000,\r
+
+    \  \"stock\": 5\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 409\", function () {\r
+
+      \    pm.response.to.have.status(409);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains error detail\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Error message is correct\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\r
+
+      \        \"Product name already registered\"\r
+
+      \    );\r
+
+      });"
+    language: text/javascript
+order: 4492105256551565
