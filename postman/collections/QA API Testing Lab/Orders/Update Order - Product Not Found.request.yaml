@@ -1,0 +1,45 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders/{{order_id}}
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"items\": [\r
+
+    \        {\r
+
+    \            \"product_id\": {{missing_product_id}},\r
+
+    \            \"quantity\": 1\r
+
+    \        }\r
+
+    \    ]\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Status code is 404\", function () {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response identifies missing product\", function () {\r
+
+      \    pm.expect(response.detail).to.include(\"Product\");\r
+
+      \    pm.expect(response.detail).to.include(\"not found\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 13000

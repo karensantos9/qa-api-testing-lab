@@ -1,0 +1,55 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"items\": [\r
+
+    \        {\r
+
+    \            \"product_id\": {{product_id}},\r
+
+    \            \"quantity\": 1\r
+
+    \        },\r
+
+    \        {\r
+
+    \            \"product_id\": {{product_id}},\r
+
+    \            \"quantity\": 2\r
+
+    \        }\r
+
+    \    ]\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Status code is 422\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response identifies duplicate products\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\r
+
+      \        \"Duplicate products are not allowed in the same order\"\r
+
+      \    );\r
+
+      });\r\n"
+    language: text/javascript
+order: 7000

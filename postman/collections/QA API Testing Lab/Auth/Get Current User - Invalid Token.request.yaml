@@ -1,0 +1,36 @@
+$kind: http-request
+url: http://127.0.0.1:8000/auth/me
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: invalid
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 401\", function () {\r
+
+      \    pm.response.to.have.status(401);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains authentication error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Invalid token is rejected\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Invalid or expired token\");\r
+
+      });"
+    language: text/javascript
+order: 5000

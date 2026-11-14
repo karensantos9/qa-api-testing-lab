@@ -1,0 +1,105 @@
+$kind: http-request
+url: "\thttp://127.0.0.1:8000/orders"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"items\": [\r
+
+    \        {\r
+
+    \            \"product_id\": {{product_id}},\r
+
+    \            \"quantity\": 1\r
+
+    \        }\r
+
+    \    ]\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{access_token}}"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Status code is 201\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains order data\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"id\");\r
+
+      \    pm.expect(response).to.have.property(\"user_id\");\r
+
+      \    pm.expect(response).to.have.property(\"total\");\r
+
+      \    pm.expect(response).to.have.property(\"items\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Order contains at least one item\", function () {\r
+
+      \    pm.expect(response.items).to.be.an(\"array\").that.is.not.empty;\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Order item contains correct fields\", function () {\r
+
+      \    pm.expect(response.items[0]).to.have.property(\"product_id\");\r
+
+      \    pm.expect(response.items[0]).to.have.property(\"quantity\");\r
+
+      \    pm.expect(response.items[0]).to.have.property(\"unit_price\");\r
+
+      \    pm.expect(response.items[0]).to.have.property(\"subtotal\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Order total matches item subtotals\", function () {\r
+
+      \    const expectedTotal = response.items.reduce(\r
+
+      \        (sum, item) => sum + item.subtotal, 0\r
+
+      \    );\r
+
+      \r
+
+      \    pm.expect(response.total).to.be.closeTo(expectedTotal, 0.01);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Order ID is a number\", function () {\r
+
+      \    pm.expect(response.id).to.be.a(\"number\");\r
+
+      });\r
+
+      \r
+
+      // Salva o ID para as próximas requisições\r
+
+      pm.collectionVariables.set(\"order_id\", response.id);\r\n"
+    language: text/javascript
+order: 1000

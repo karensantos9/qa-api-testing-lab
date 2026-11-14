@@ -1,0 +1,99 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders/{{order_id}}
+method: GET
+body:
+  type: json
+  content: "\r
+
+    pm.test(\"Status code is 200\", function () {\r
+
+    \    pm.response.to.have.status(200);\r
+
+    });\r
+
+    \r
+
+    const response = pm.response.json();\r
+
+    \r
+
+    pm.test(\"Response contains order data\", function () {\r
+
+    \    pm.expect(response).to.have.property(\"id\");\r
+
+    \    pm.expect(response).to.have.property(\"user_id\");\r
+
+    \    pm.expect(response).to.have.property(\"total\");\r
+
+    \    pm.expect(response).to.have.property(\"items\");\r
+
+    });\r
+
+    \r
+
+    pm.test(\"Returned order ID matches requested ID\", function () {\r
+
+    \    pm.expect(response.id).to.eql(\r
+
+    \        Number(pm.collectionVariables.get(\"order_id\"))\r
+
+    \    );\r
+
+    });\r
+
+    \r
+
+    pm.test(\"Order contains items\", function () {\r
+
+    \    pm.expect(response.items).to.be.an(\"array\").that.is.not.empty;\r
+
+    });\r\n"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains order data\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"id\");\r
+
+      \    pm.expect(response).to.have.property(\"user_id\");\r
+
+      \    pm.expect(response).to.have.property(\"total\");\r
+
+      \    pm.expect(response).to.have.property(\"items\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Returned order ID matches requested ID\", function () {\r
+
+      \    pm.expect(response.id).to.eql(\r
+
+      \        Number(pm.collectionVariables.get(\"order_id\"))\r
+
+      \    );\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Order contains items\", function () {\r
+
+      \    pm.expect(response.items).to.be.an(\"array\").that.is.not.empty;\r
+
+      });\r\n"
+    language: text/javascript
+order: 9000

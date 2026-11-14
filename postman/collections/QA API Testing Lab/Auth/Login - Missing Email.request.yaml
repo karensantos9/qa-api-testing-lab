@@ -1,0 +1,49 @@
+$kind: http-request
+url: http://127.0.0.1:8000/auth/login
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"password\": \"senha123\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 422\", function () {\r
+
+      \    pm.response.to.have.status(422);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains validation error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      \    pm.expect(response.detail).to.be.an(\"array\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation error identifies email field\", function () {\r
+
+      \    pm.expect(response.detail[0].loc).to.include(\"email\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Validation message is Field required\", function () {\r
+
+      \    pm.expect(response.detail[0].msg).to.eql(\"Field required\");\r
+
+      });"
+    language: text/javascript
+order: 7000

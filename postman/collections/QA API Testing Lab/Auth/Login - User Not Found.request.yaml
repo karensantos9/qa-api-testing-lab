@@ -1,0 +1,41 @@
+$kind: http-request
+url: http://127.0.0.1:8000/auth/login
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"usuario.inexistente@teste.com\",\r
+
+    \    \"password\": \"senha123\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 401\", function () {\r
+
+      \    pm.response.to.have.status(401);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains error detail\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"API does not reveal whether user exists\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Incorrect email or password\");\r
+
+      });"
+    language: text/javascript
+order: 6000

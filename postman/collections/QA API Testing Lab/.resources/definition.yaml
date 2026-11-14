@@ -1,1 +1,20 @@
 $kind: collection
+variables:
+  - key: json_web_token_0wie
+    secret: true
+    disabled: false
+  - key: access_token
+    secret: true
+    disabled: false
+  - key: product_id
+    value: ""
+    disabled: false
+  - key: order_id
+    value: ""
+    disabled: false
+  - key: missing_product_id
+    value: ""
+    disabled: false
+  - key: missing_order_id
+    value: ""
+    disabled: false

@@ -1,0 +1,59 @@
+$kind: http-request
+url: http://127.0.0.1:8000/auth/login
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"karen.souza12312@gmail.com\",\r
+
+    \    \"password\": \"123456\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains access token\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"access_token\");\r
+
+      \    pm.expect(response.access_token).to.be.a(\"string\").and.not.empty;\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Token type is bearer\", function () {\r
+
+      \    pm.expect(response.token_type).to.eql(\"bearer\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response does not expose user password\", function () {\r
+
+      \    pm.expect(response).to.not.have.property(\"password\");\r
+
+      \    pm.expect(response).to.not.have.property(\"password_hash\");\r
+
+      });\r
+
+      \r
+
+      // Salvar token para utilizar nas requisições protegidas\r
+
+      pm.collectionVariables.set(\"access_token\", response.access_token);"
+    language: text/javascript
+order: 2000

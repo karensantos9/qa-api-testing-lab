@@ -1,0 +1,35 @@
+$kind: http-request
+name: Get Current User - No Token
+url: http://127.0.0.1:8000/auth/me
+method: GET
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 401\", function () {\r
+
+      \    pm.response.to.have.status(401);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains authentication error\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"detail\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Error message is correct\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Not authenticated\");\r
+
+      });"
+    language: text/javascript
+order: 4256

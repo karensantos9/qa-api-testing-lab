@@ -1,0 +1,83 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders/{{order_id}}
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"items\": [\r
+
+    \        {\r
+
+    \            \"product_id\": {{product_id}},\r
+
+    \            \"quantity\": 2\r
+
+    \        }\r
+
+    \    ]\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Updated order contains correct fields\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"id\");\r
+
+      \    pm.expect(response).to.have.property(\"total\");\r
+
+      \    pm.expect(response).to.have.property(\"items\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Order ID remains unchanged\", function () {\r
+
+      \    pm.expect(response.id).to.eql(\r
+
+      \        Number(pm.collectionVariables.get(\"order_id\"))\r
+
+      \    );\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Updated quantity is correct\", function () {\r
+
+      \    pm.expect(response.items[0].quantity).to.eql(2);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Total matches updated items\", function () {\r
+
+      \    const expectedTotal = response.items.reduce(\r
+
+      \        (sum, item) => sum + item.subtotal, 0\r
+
+      \    );\r
+
+      \r
+
+      \    pm.expect(response.total).to.be.closeTo(expectedTotal, 0.01);\r
+
+      });\r\n"
+    language: text/javascript
+order: 11000

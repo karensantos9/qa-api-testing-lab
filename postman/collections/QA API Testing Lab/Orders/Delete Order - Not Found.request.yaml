@@ -1,0 +1,26 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders/{{missing_order_id}}
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "\r
+
+      pm.test(\"Status code is 404\", function () {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains order not found error\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Order not found\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 16000

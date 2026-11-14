@@ -1,0 +1,60 @@
+$kind: http-request
+url: http://127.0.0.1:8000/auth/me
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{access_token}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response contains user data\", function () {\r
+
+      \    pm.expect(response).to.have.property(\"id\");\r
+
+      \    pm.expect(response).to.have.property(\"name\");\r
+
+      \    pm.expect(response).to.have.property(\"email\");\r
+
+      \    pm.expect(response).to.have.property(\"role\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"User ID is a number\", function () {\r
+
+      \    pm.expect(response.id).to.be.a(\"number\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Email has valid format\", function () {\r
+
+      \    pm.expect(response.email).to.include(\"@\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response does not expose password\", function () {\r
+
+      \    pm.expect(response).to.not.have.property(\"password\");\r
+
+      \    pm.expect(response).to.not.have.property(\"password_hash\");\r
+
+      });"
+    language: text/javascript
+order: 3000
