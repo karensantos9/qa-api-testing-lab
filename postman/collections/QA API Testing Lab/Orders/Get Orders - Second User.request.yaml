@@ -1,0 +1,8 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders
+method: GET
+headers:
+  Authorization: Bearer {{second_user_token}}
+auth:
+  type: noauth
+order: 21000

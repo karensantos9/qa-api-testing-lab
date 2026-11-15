@@ -1,0 +1,28 @@
+$kind: http-request
+url: http://127.0.0.1:8000/orders
+method: GET
+auth:
+  type: inherit
+  credentials:
+    id: 09fcc95d-8633-4049-8dc8-34f7ef445564
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 401\", function () {\r
+
+      \    pm.response.to.have.status(401);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Error message is correct\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Invalid or expired token\");\r
+
+      });"
+    language: text/javascript
+order: 19000

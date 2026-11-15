@@ -1,0 +1,46 @@
+$kind: http-request
+name: Get Other User Order
+url: http://127.0.0.1:8000/orders/1
+method: GET
+headers:
+  Authorization: Bearer {{second_user_token}}
+body:
+  type: json
+  content: "{\r
+
+    \    \"items\": [\r
+
+    \        {\r
+
+    \            \"product_id\": 1,\r
+
+    \            \"quantity\": 1\r
+
+    \        }\r
+
+    \    ]\r
+
+    }"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 404\", function () {\r
+
+      \    pm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Order not found message is correct\", function () {\r
+
+      \    pm.expect(response.detail).to.eql(\"Order not found\");\r
+
+      });"
+    language: text/javascript
+order: 23000
